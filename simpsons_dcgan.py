@@ -1,6 +1,7 @@
 from __future__ import print_function, division
 
 import os
+
 os.environ["KERAS_BACKEND"] = "plaidml.keras.backend"
 
 from keras.layers import Input, Dense, Reshape, Flatten, Dropout, Conv2DTranspose
@@ -14,10 +15,7 @@ import random
 import matplotlib.pyplot as plt
 from PIL import Image
 from glob import glob
-from numpy.random import randn
 
-
-import sys
 
 import numpy as np
 
@@ -29,31 +27,18 @@ class DCGAN():
         self.channels = 3
         self.img_shape = (self.img_rows, self.img_cols, self.channels)
         self.latent_dim = 100
-
-        optimizer = Adam(lr=0.0002, beta_1=0.5)
-
-        # Build and compile the discriminator
+        optimizer = Adam(lr=0.0004, beta_1=0.5)
+        optimizer_gen = Adam(lr=0.00008, beta_1=0.5)
         self.discriminator = self.build_discriminator()
         self.discriminator.compile(loss='binary_crossentropy', optimizer=optimizer)
-
-        # Build the generator
         self.generator = self.build_generator()
-        self.generator.compile(loss='binary_crossentropy', optimizer=optimizer)
-
-        # The generator takes noise as input and generates imgs
+        self.generator.compile(loss='binary_crossentropy', optimizer=optimizer_gen)
         z = Input(shape=(self.latent_dim,))
         img = self.generator(z)
-
-        # For the combined model we will only train the generator
         self.discriminator.trainable = False
-
-        # The discriminator takes generated images as input and determines validity
         valid = self.discriminator(img)
-
-        # The combined model  (stacked generator and discriminator)
-        # Trains the generator to fool the discriminator
         self.combined = Model(z, valid)
-        self.combined.compile(loss='binary_crossentropy', optimizer=optimizer)
+        self.combined.compile(loss='binary_crossentropy', optimizer=optimizer_gen)
 
     def build_generator(self):
 
@@ -63,23 +48,28 @@ class DCGAN():
         model.add(Reshape((8, 8, 1024)))
         model.add(LeakyReLU(alpha=0.2))
 
-        model.add(Conv2DTranspose(filters=512, kernel_size=[5,5], strides=[2,2], kernel_initializer=TruncatedNormal(stddev=0.02), padding="same"))
+        model.add(Conv2DTranspose(filters=512, kernel_size=[5, 5], strides=[2, 2],
+                                  kernel_initializer=TruncatedNormal(stddev=0.02), padding="same"))
         model.add(BatchNormalization(epsilon=EPSILON))
         model.add(LeakyReLU(alpha=0.2))
 
-        model.add(Conv2DTranspose(filters=256, kernel_size=[5,5], strides=[2,2], kernel_initializer=TruncatedNormal(stddev=0.02), padding="same"))
+        model.add(Conv2DTranspose(filters=256, kernel_size=[5, 5], strides=[2, 2],
+                                  kernel_initializer=TruncatedNormal(stddev=0.02), padding="same"))
         model.add(BatchNormalization(epsilon=EPSILON))
         model.add(LeakyReLU(alpha=0.2))
 
-        model.add(Conv2DTranspose(filters=128, kernel_size=[5,5], strides=[2,2], kernel_initializer=TruncatedNormal(stddev=0.02), padding="same"))
+        model.add(Conv2DTranspose(filters=128, kernel_size=[5, 5], strides=[2, 2],
+                                  kernel_initializer=TruncatedNormal(stddev=0.02), padding="same"))
         model.add(BatchNormalization(epsilon=EPSILON))
         model.add(LeakyReLU(alpha=0.2))
 
-        model.add(Conv2DTranspose(filters=64, kernel_size=[5,5], strides=[2,2], kernel_initializer=TruncatedNormal(stddev=0.02), padding="same"))
+        model.add(Conv2DTranspose(filters=64, kernel_size=[5, 5], strides=[2, 2],
+                                  kernel_initializer=TruncatedNormal(stddev=0.02), padding="same"))
         model.add(BatchNormalization(epsilon=EPSILON))
         model.add(LeakyReLU(alpha=0.2))
 
-        model.add(Conv2DTranspose(filters=self.channels, kernel_size=[5,5], strides=[1,1], kernel_initializer=TruncatedNormal(stddev=0.02), padding="same"))
+        model.add(Conv2DTranspose(filters=self.channels, kernel_size=[5, 5], strides=[1, 1],
+                                  kernel_initializer=TruncatedNormal(stddev=0.02), padding="same"))
         model.add(Activation("tanh"))
 
         print("Generator")
@@ -94,23 +84,33 @@ class DCGAN():
 
         model = Sequential()
 
-        model.add(Conv2D(filters=64, kernel_size=[5,5], strides=[2,2], kernel_initializer=TruncatedNormal(stddev=0.02), input_shape=self.img_shape, padding="same"))
+        model.add(
+            Conv2D(filters=64, kernel_size=[5, 5], strides=[2, 2], kernel_initializer=TruncatedNormal(stddev=0.02),
+                   input_shape=self.img_shape, padding="same"))
         model.add(BatchNormalization(epsilon=EPSILON))
         model.add(LeakyReLU(alpha=0.2))
 
-        model.add(Conv2D(filters=128, kernel_size=[5,5], strides=[2,2], kernel_initializer=TruncatedNormal(stddev=0.02), padding="same"))
+        model.add(
+            Conv2D(filters=128, kernel_size=[5, 5], strides=[2, 2], kernel_initializer=TruncatedNormal(stddev=0.02),
+                   padding="same"))
         model.add(BatchNormalization(epsilon=EPSILON))
         model.add(LeakyReLU(alpha=0.2))
 
-        model.add(Conv2D(filters=256, kernel_size=[5,5], strides=[2,2], kernel_initializer=TruncatedNormal(stddev=0.02), padding="same"))
+        model.add(
+            Conv2D(filters=256, kernel_size=[5, 5], strides=[2, 2], kernel_initializer=TruncatedNormal(stddev=0.02),
+                   padding="same"))
         model.add(BatchNormalization(epsilon=EPSILON))
         model.add(LeakyReLU(alpha=0.2))
 
-        model.add(Conv2D(filters=512, kernel_size=[5, 5], strides=[1, 1], kernel_initializer=TruncatedNormal(stddev=0.02), padding="same"))
+        model.add(
+            Conv2D(filters=512, kernel_size=[5, 5], strides=[1, 1], kernel_initializer=TruncatedNormal(stddev=0.02),
+                   padding="same"))
         model.add(BatchNormalization(epsilon=EPSILON))
         model.add(LeakyReLU(alpha=0.2))
 
-        model.add(Conv2D(filters=1024, kernel_size=[5, 5], strides=[2, 2], kernel_initializer=TruncatedNormal(stddev=0.02), padding="same"))
+        model.add(
+            Conv2D(filters=1024, kernel_size=[5, 5], strides=[2, 2], kernel_initializer=TruncatedNormal(stddev=0.02),
+                   padding="same"))
         model.add(BatchNormalization(epsilon=EPSILON))
         model.add(LeakyReLU(alpha=0.2))
 
@@ -145,7 +145,8 @@ class DCGAN():
 
     def train(self, epochs, batch_size=128):
 
-        x_train = np.asarray([np.asarray(Image.open(file).resize((self.img_rows, self.img_cols))) for file in glob(INPUT_DATA_DIR + '*')])
+        x_train = np.asarray([np.asarray(Image.open(file).resize((self.img_rows, self.img_cols))) for file in
+                              glob(INPUT_DATA_DIR + '*')])
 
         print("Input: " + str(x_train.shape))
 
@@ -158,7 +159,7 @@ class DCGAN():
             epoch_n += 1
             batch = 0
             for imgs in self.get_batches(x_train, batch_size):
-                batch +=1
+                batch += 1
                 # Sample noise and generate a batch of new images
                 noise = np.random.uniform(-1, 1, (batch_size, self.latent_dim))
                 gen_imgs = self.generator.predict(noise)
@@ -183,23 +184,24 @@ class DCGAN():
             print("Epoch " + str(epoch_n) + " finished")
             self.save_imgs(epoch)
 
-    def save_imgs(self, epoch):
-        r, c = 5, 5
-        noise = np.random.uniform(-1, 1, (r * c, self.latent_dim))
-        gen_imgs = self.generator.predict(noise)
-
-        # Rescale images 0 - 1
-        gen_imgs = 0.5 * gen_imgs + 0.5
-
-        fig, axs = plt.subplots(r, c)
-        cnt = 0
-        for i in range(r):
-            for j in range(c):
-                axs[i,j].imshow(gen_imgs[cnt, :,:,0])
-                axs[i,j].axis('off')
-                cnt += 1
-        fig.savefig("images/simpsons_%d.png" % epoch)
+    def show_samples(self, sample_images, name, epoch):
+        figure, axes = plt.subplots(1, len(sample_images), figsize=(128, 128))
+        for index, axis in enumerate(axes):
+            axis.axis('off')
+            image_array = sample_images[index]
+            axis.imshow(image_array)
+            image = Image.fromarray(image_array)
+            image.save(name + "_" + str(epoch) + "_" + str(index) + ".png")
+        plt.savefig(name + "simpsons_" + str(epoch) + ".png", bbox_inches='tight', pad_inches=0)
+        plt.show()
         plt.close()
+
+    def save_imgs(self, epoch):
+        r = 5
+        noise = np.random.uniform(-1, 1, (r, self.latent_dim))
+        samples = self.generator.predict(noise)
+        sample_images = [((sample + 1.0) * 127.5).astype(np.uint8) for sample in samples]
+        self.show_samples(sample_images, "images/", epoch)
 
 
 INPUT_DATA_DIR = "/Users/edwardhyde/PycharmProjects/gan/cropped/"
