@@ -27,8 +27,8 @@ class DCGAN():
         self.channels = 3
         self.img_shape = (self.img_rows, self.img_cols, self.channels)
         self.latent_dim = 100
-        optimizer = Adam(lr=0.0001, beta_1=0.5)
-        optimizer_gen = Adam(lr=0.0002, beta_1=0.5)
+        optimizer = Adam(lr=0.0002, beta_1=0.5)
+        optimizer_gen = Adam(lr=0.00012, beta_1=0.5)
         self.discriminator = self.build_discriminator()
         self.discriminator.compile(loss='binary_crossentropy', optimizer=optimizer)
         self.generator = self.build_generator()
