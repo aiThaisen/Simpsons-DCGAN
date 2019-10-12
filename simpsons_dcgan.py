@@ -4,13 +4,13 @@ import os
 
 os.environ["KERAS_BACKEND"] = "plaidml.keras.backend"
 
-from keras.layers import Input, Dense, Reshape, Flatten, Dropout, Conv2DTranspose
-from keras.layers import BatchNormalization, Activation, ZeroPadding2D
+from keras.layers import Input, Dense, Reshape, Flatten, Conv2DTranspose
+from keras.layers import BatchNormalization, Activation
 from keras.layers.advanced_activations import LeakyReLU
-from keras.layers.convolutional import UpSampling2D, Conv2D
+from keras.layers.convolutional import Conv2D
 from keras.models import Sequential, Model
-from keras.optimizers import Adam, RMSprop
-from keras.initializers import RandomNormal, TruncatedNormal
+from keras.optimizers import RMSprop
+from keras.initializers import RandomNormal
 import random
 import matplotlib.pyplot as plt
 from PIL import Image
@@ -198,4 +198,4 @@ class DCGAN():
 INPUT_DATA_DIR = "/Users/edwardhyde/PycharmProjects/gan/cropped/"
 
 dcgan = DCGAN()
-dcgan.train(epochs=325, batch_size=64)
+dcgan.train(epochs=1000, batch_size=64)
