@@ -1,11 +1,11 @@
-# Simpsons DCGAN using Keras
+# Simpsons DCGAN
 
 ### Dataset
 
 Unfiltered cropped Simpsons faces from this dataset
 https://www.kaggle.com/kostastokis/simpsons-faces
 
-### Network architecture
+### Keras DCGAN
 
 Dataset is quite dirty, so results are unrealistic.  
 My network is two times smaller than [Radford et al., 2015.](https://arxiv.org/abs/1511.06434)  
@@ -102,3 +102,14 @@ _________________________________________________________________
 
 ### Results
 <img src="https://raw.githubusercontent.com/dredwardhyde/Simpsons-DCGAN/master/results.png" width="900"/>
+
+
+### Tensorflow DCGAN
+
+I've used [Radford et al., 2015.](https://arxiv.org/abs/1511.06434) architecture
+- Random normal initializers, not truncated
+- No noise was added to real input
+- Aggressive learning rates for generator
+
+### Results
+<img src="https://raw.githubusercontent.com/dredwardhyde/Simpsons-DCGAN/master/results-best.PNG" width="900"/>
