@@ -12,6 +12,7 @@ from keras.models import Sequential, Model
 from keras.optimizers import Adam
 from keras.initializers import RandomNormal
 import random
+import time
 import matplotlib.pyplot as plt
 from PIL import Image
 from glob import glob
@@ -162,6 +163,7 @@ class DCGAN():
         for epoch in range(epochs):
             epoch_n += 1
             batch = 0
+            start_time = time.time()
             for imgs in self.get_batches(x_train, batch_size):
                 batch += 1
                 noise = np.random.uniform(-1, 1, (batch_size, self.latent_dim))
@@ -175,7 +177,7 @@ class DCGAN():
                 d_losses.append(d_loss)
                 g_losses.append(g_loss)
 
-            print("Epoch " + str(epoch_n) + " finished")
+            print("Epoch " + str(epoch_n) + " finished in " + str(time.time() - start_time))
             self.save_imgs(epoch)
             plt.plot(d_losses, label='Discriminator', alpha=0.6)
             plt.plot(g_losses, label='Generator', alpha=0.6)
@@ -204,7 +206,7 @@ class DCGAN():
 
 EPSILON = 0.00005
 
-INPUT_DATA_DIR = "C:/Users/tony/PycharmProjects/untitled/cropped/"
+INPUT_DATA_DIR = "/Users/edwardhyde/PycharmProjects/gan/cropped/"
 
 dcgan = DCGAN()
 dcgan.train(epochs=500, batch_size=64)
