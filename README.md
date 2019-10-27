@@ -104,7 +104,7 @@ _________________________________________________________________
 ```
 
 ### Keras Results
-<img src="https://raw.githubusercontent.com/dredwardhyde/Simpsons-DCGAN/master/results-keras.png" width="900"/>
+<img src="https://raw.githubusercontent.com/dredwardhyde/Simpsons-DCGAN/master/results-keras.PNG" width="900"/>
 
 ### Losses
 <img src="https://raw.githubusercontent.com/dredwardhyde/Simpsons-DCGAN/master/losses-keras.png" width="640"/>
@@ -112,7 +112,7 @@ _________________________________________________________________
 ### Performance
 
 #### Keras backed by Tensorflow - nVidia GeForce RTX2080 Ti EVGA XC2 ULTRA
-<img src="https://raw.githubusercontent.com/dredwardhyde/Simpsons-DCGAN/master/tensorflow-keras.png" width="900"/>
+<img src="https://raw.githubusercontent.com/dredwardhyde/Simpsons-DCGAN/master/tensorflow-keras.PNG" width="900"/>
 
 #### Keras backed by PlaidML - AMD Radeon RX Vega 64 Sapphire Nitro+
 
