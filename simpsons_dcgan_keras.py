@@ -1,6 +1,8 @@
 from __future__ import print_function, division
 
 import os
+os.environ["KERAS_BACKEND"] = "plaidml.keras.backend"
+
 import random
 import time
 import matplotlib.pyplot as plt
@@ -14,7 +16,6 @@ from keras.optimizers import Adam
 from keras.initializers import RandomNormal
 from PIL import Image
 from glob import glob
-os.environ["KERAS_BACKEND"] = "plaidml.keras.backend"
 
 
 class DCGAN():
@@ -155,6 +156,8 @@ class DCGAN():
 
 
 INPUT_DATA_DIR = "/Users/edwardhyde/PycharmProjects/gan/cropped/"
+if not os.path.exists("./images/"):
+    os.makedirs("./images/")
 
 dcgan = DCGAN()
 dcgan.train(epochs=500, batch_size=64)
