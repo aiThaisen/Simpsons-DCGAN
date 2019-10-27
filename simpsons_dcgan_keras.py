@@ -43,92 +43,54 @@ class DCGAN():
     def build_generator(self):
 
         model = Sequential()
-
         model.add(Dense(8 * 8 * 1024, activation="linear", input_dim=self.latent_dim))
         model.add(Reshape((8, 8, 1024)))
         model.add(LeakyReLU(alpha=0.2))
-
-        model.add(Conv2DTranspose(filters=512, kernel_size=[5, 5], strides=[2, 2],
-                                  kernel_initializer=RandomNormal(mean=0.0, stddev=0.02), padding="same"))
+        model.add(Conv2DTranspose(filters=512, kernel_size=[5, 5], strides=[2, 2], kernel_initializer=RandomNormal(mean=0.0, stddev=0.02), padding="same"))
         model.add(BatchNormalization(epsilon=EPSILON, trainable=True))
         model.add(LeakyReLU(alpha=0.2))
-
-        model.add(Conv2DTranspose(filters=256, kernel_size=[5, 5], strides=[2, 2],
-                                  kernel_initializer=RandomNormal(mean=0.0, stddev=0.02), padding="same"))
+        model.add(Conv2DTranspose(filters=256, kernel_size=[5, 5], strides=[2, 2], kernel_initializer=RandomNormal(mean=0.0, stddev=0.02), padding="same"))
         model.add(BatchNormalization(epsilon=EPSILON, trainable=True))
         model.add(LeakyReLU(alpha=0.2))
-
-        model.add(Conv2DTranspose(filters=128, kernel_size=[5, 5], strides=[2, 2],
-                                  kernel_initializer=RandomNormal(mean=0.0, stddev=0.02), padding="same"))
+        model.add(Conv2DTranspose(filters=128, kernel_size=[5, 5], strides=[2, 2], kernel_initializer=RandomNormal(mean=0.0, stddev=0.02), padding="same"))
         model.add(BatchNormalization(epsilon=EPSILON, trainable=True))
         model.add(LeakyReLU(alpha=0.2))
-
-        model.add(Conv2DTranspose(filters=64, kernel_size=[5, 5], strides=[2, 2],
-                                  kernel_initializer=RandomNormal(mean=0.0, stddev=0.02), padding="same"))
+        model.add(Conv2DTranspose(filters=64, kernel_size=[5, 5], strides=[2, 2], kernel_initializer=RandomNormal(mean=0.0, stddev=0.02), padding="same"))
         model.add(BatchNormalization(epsilon=EPSILON, trainable=True))
         model.add(LeakyReLU(alpha=0.2))
-
-        model.add(Conv2DTranspose(filters=self.channels, kernel_size=[5, 5], strides=[1, 1],
-                                  kernel_initializer=RandomNormal(mean=0.0, stddev=0.02), padding="same"))
+        model.add(Conv2DTranspose(filters=self.channels, kernel_size=[5, 5], strides=[1, 1], kernel_initializer=RandomNormal(mean=0.0, stddev=0.02), padding="same"))
         model.add(Activation("tanh"))
-
         print("Generator")
         model.summary()
-
         noise = Input(shape=(self.latent_dim,))
         img = model(noise)
-
         return Model(noise, img)
 
     def build_discriminator(self):
 
         model = Sequential()
-
-        model.add(
-            Conv2D(filters=64, kernel_size=[5, 5], strides=[2, 2],
-                   kernel_initializer=RandomNormal(mean=0.0, stddev=0.02),
-                   input_shape=self.img_shape, padding="same"))
+        model.add(Conv2D(filters=64, kernel_size=[5, 5], strides=[2, 2], kernel_initializer=RandomNormal(mean=0.0, stddev=0.02), input_shape=self.img_shape, padding="same"))
         model.add(BatchNormalization(epsilon=EPSILON, trainable=True))
         model.add(LeakyReLU(alpha=0.2))
-
-        model.add(
-            Conv2D(filters=128, kernel_size=[5, 5], strides=[2, 2],
-                   kernel_initializer=RandomNormal(mean=0.0, stddev=0.02),
-                   padding="same"))
+        model.add(Conv2D(filters=128, kernel_size=[5, 5], strides=[2, 2], kernel_initializer=RandomNormal(mean=0.0, stddev=0.02), padding="same"))
         model.add(BatchNormalization(epsilon=EPSILON, trainable=True))
         model.add(LeakyReLU(alpha=0.2))
-
-        model.add(
-            Conv2D(filters=256, kernel_size=[5, 5], strides=[2, 2],
-                   kernel_initializer=RandomNormal(mean=0.0, stddev=0.02),
-                   padding="same"))
+        model.add(Conv2D(filters=256, kernel_size=[5, 5], strides=[2, 2], kernel_initializer=RandomNormal(mean=0.0, stddev=0.02), padding="same"))
         model.add(BatchNormalization(epsilon=EPSILON, trainable=True))
         model.add(LeakyReLU(alpha=0.2))
-
-        model.add(
-            Conv2D(filters=512, kernel_size=[5, 5], strides=[1, 1],
-                   kernel_initializer=RandomNormal(mean=0.0, stddev=0.02),
-                   padding="same"))
+        model.add(Conv2D(filters=512, kernel_size=[5, 5], strides=[1, 1], kernel_initializer=RandomNormal(mean=0.0, stddev=0.02), padding="same"))
         model.add(BatchNormalization(epsilon=EPSILON, trainable=True))
         model.add(LeakyReLU(alpha=0.2))
-
-        model.add(
-            Conv2D(filters=1024, kernel_size=[5, 5], strides=[2, 2],
-                   kernel_initializer=RandomNormal(mean=0.0, stddev=0.02),
-                   padding="same"))
+        model.add(Conv2D(filters=1024, kernel_size=[5, 5], strides=[2, 2], kernel_initializer=RandomNormal(mean=0.0, stddev=0.02), padding="same"))
         model.add(BatchNormalization(epsilon=EPSILON, trainable=True))
         model.add(LeakyReLU(alpha=0.2))
-
         model.add(Flatten())
         model.add(Dense(1, activation='linear'))
         model.add(Activation("sigmoid"))
-
         print("Discriminator")
         model.summary()
-
         img = Input(shape=self.img_shape)
         validity = model(img)
-
         return Model(img, validity)
 
     def get_batches(self, data, batch_size):
