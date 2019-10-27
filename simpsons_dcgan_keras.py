@@ -7,8 +7,7 @@ import random
 import time
 import matplotlib.pyplot as plt
 import numpy as np
-from keras.layers import Input, Dense, Reshape, Flatten, Conv2DTranspose
-from keras.layers import BatchNormalization, Activation
+from keras.layers import Input, Dense, Reshape, Flatten, Conv2DTranspose, BatchNormalization, Activation
 from keras.layers.advanced_activations import LeakyReLU
 from keras.layers.convolutional import Conv2D
 from keras.models import Sequential, Model
@@ -56,7 +55,7 @@ class DCGAN():
         model.add(LeakyReLU(alpha=0.2))
         model.add(Conv2DTranspose(filters=self.channels, kernel_size=[5, 5], strides=[1, 1], kernel_initializer=RandomNormal(mean=0.0, stddev=0.02), padding="same"))
         model.add(Activation("tanh"))
-        print("Generator")
+        print("Generator:")
         model.summary()
         noise = Input(shape=(self.latent_dim,))
         img = model(noise)
@@ -82,7 +81,7 @@ class DCGAN():
         model.add(Flatten())
         model.add(Dense(1, activation='linear'))
         model.add(Activation("sigmoid"))
-        print("Discriminator")
+        print("Discriminator:")
         model.summary()
         img = Input(shape=self.img_shape)
         validity = model(img)
