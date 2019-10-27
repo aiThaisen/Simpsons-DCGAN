@@ -115,6 +115,7 @@ _________________________________________________________________
 <img src="https://raw.githubusercontent.com/dredwardhyde/Simpsons-DCGAN/master/tensorflow-keras.PNG" width="900"/>
 
 #### Keras backed by PlaidML - AMD Radeon RX Vega 64 Sapphire Nitro+
+<img src="https://raw.githubusercontent.com/dredwardhyde/Simpsons-DCGAN/master/plaidml-keras.png" width="900"/>
 
 ### Tensorflow Results
 <img src="https://raw.githubusercontent.com/dredwardhyde/Simpsons-DCGAN/master/results-tensorflow.PNG" width="900"/>
